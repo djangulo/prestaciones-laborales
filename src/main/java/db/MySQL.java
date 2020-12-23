@@ -17,18 +17,17 @@ import db.EmpresaStorer;
 public class MySQL implements EmpresaStorer, EmpleadoStorer {
     private Connection conn;
 
-	public MySQL(String connURL, String username, String password) {
-		try {
+    public MySQL(String connURL, String username, String password) {
+        try {
             conn = DriverManager.getConnection(connURL, username, password);
-		} catch (SQLException e) {
+        } catch (SQLException e) {
             printSQLException(e);
         }
     }
 
     public ArrayList<Empleado> ListarEmpleados(int lim, int off) throws SQLException {
-        String query = "SELECT "
-            +"id, nombre, apellidos, fecha_de_contratacion,"
-            +"salario_mensual, id_empresa, rnc_empresa, nombre_empresa FROM empleados_full";
+        String query = "SELECT " + "id, nombre, apellidos, fecha_de_contratacion,"
+                + "salario_mensual, id_empresa, rnc_empresa, nombre_empresa FROM empleados_full";
 
         if (lim == 0) {
             query += " LIMIT 10";
@@ -41,25 +40,26 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
         } else {
             query += ";";
         }
-        
+
         ArrayList<Empleado> res = new ArrayList<Empleado>();
         try {
 
             PreparedStatement stmt = conn.prepareStatement(query);
-    
+
             ResultSet rs = stmt.executeQuery();
-    
+
             while (rs.next()) {
                 Empleado e = new Empleado();
-                e.ID = rs.getLong("id");
-                e.Nombre = rs.getString("nombre");
-                e.Apellidos = rs.getString("apellidos");
-                e.FechaDeContratacion = rs.getDate("fecha_de_contratacion");
-                e.SalarioMensual = rs.getDouble("salario_mensual");
-                e.IDEmpresa = e.empresa.ID = rs.getLong("id_empresa");
-                e.empresa.RNC = rs.getString("rnc_empresa");
-                e.empresa.Nombre = rs.getString("nombre_empresa");
-    
+                e.setId(rs.getLong("id"));
+                e.setNombre(rs.getString("nombre"));
+                e.setApellidos(rs.getString("apellidos"));
+                e.setFechaDeContratacion(rs.getDate("fecha_de_contratacion").toString());
+                e.setSalarioMensual(rs.getDouble("salario_mensual"));
+                e.setIdEmpresa(rs.getLong("id_empresa"));
+                e.getEmpresa().setId(rs.getLong("id_empresa"));
+                e.getEmpresa().setRnc(rs.getString("rnc_empresa"));
+                e.getEmpresa().setNombre(rs.getString("nombre_empresa"));
+
                 res.add(e);
             }
         } catch (SQLException ex) {
@@ -70,10 +70,9 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
     }
 
     public ArrayList<Empleado> ListarEmpleadosParaEmpresa(long idEmpresa, int lim, int off) throws SQLException {
-        String query = "SELECT "
-            +"id, nombre, apellidos, fecha_de_contratacion,"
-            +"salario_mensual, id_empresa, rnc_empresa, nombre_empresa FROM empleados_full"
-            +" WHERE id_empresa = ?";
+        String query = "SELECT " + "id, nombre, apellidos, fecha_de_contratacion,"
+                + "salario_mensual, id_empresa, rnc_empresa, nombre_empresa FROM empleados_full"
+                + " WHERE id_empresa = ?";
 
         if (lim == 0) {
             query += " LIMIT 10";
@@ -86,114 +85,106 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
         } else {
             query += ";";
         }
-        
+
         ArrayList<Empleado> res = new ArrayList<Empleado>();
         try {
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setLong(1, idEmpresa);
-    
+
             ResultSet rs = stmt.executeQuery();
-    
+
             while (rs.next()) {
                 Empleado e = new Empleado();
-                e.ID = rs.getLong("id");
-                e.Nombre = rs.getString("nombre");
-                e.Apellidos = rs.getString("apellidos");
-                e.FechaDeContratacion = rs.getDate("fecha_de_contratacion");
-                e.SalarioMensual = rs.getDouble("salario_mensual");
-                e.IDEmpresa = e.empresa.ID = rs.getLong("id_empresa");
-                e.empresa.RNC = rs.getString("rnc_empresa");
-                e.empresa.Nombre = rs.getString("nombre_empresa");
-    
+                e.setId(rs.getLong("id"));
+                e.setNombre(rs.getString("nombre"));
+                e.setApellidos(rs.getString("apellidos"));
+                e.setFechaDeContratacion(rs.getDate("fecha_de_contratacion").toString());
+                e.setSalarioMensual(rs.getDouble("salario_mensual"));
+                e.setIdEmpresa(rs.getLong("id_empresa"));
+                e.getEmpresa().setId(rs.getLong("id_empresa"));
+                e.getEmpresa().setRnc(rs.getString("rnc_empresa"));
+                e.getEmpresa().setNombre(rs.getString("nombre_empresa"));
+
                 res.add(e);
             }
         } catch (SQLException ex) {
             throw ex;
         }
 
-
         return res;
     }
-    
-	public Empleado GetEmpleado(long id) throws SQLException {
-        String queryStr = "SELECT "
-            +"  id, nombre, apellidos, fecha_de_contratacion,"
-            +"  salario_mensual, id_empresa, nombre_empresa, rnc_empresa FROM empleados_full"
-            +"WHERE id = ?;";
+
+    public Empleado GetEmpleado(long id) throws SQLException {
+        String queryStr = "SELECT " + "  id, nombre, apellidos, fecha_de_contratacion,"
+                + "  salario_mensual, id_empresa, nombre_empresa, rnc_empresa FROM empleados_full" + "WHERE id = ?;";
 
         Empleado e = new Empleado();
         try {
             PreparedStatement query = conn.prepareStatement(queryStr);
             query.setLong(1, id);
-    
+
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
-                e.ID = rs.getLong("id");
-                e.Nombre = rs.getString("nombre");
-                e.Apellidos = rs.getString("apellidos");
-                e.SalarioMensual = rs.getDouble("salario_mensual");
-                e.FechaDeContratacion = rs.getDate("fecha_de_contratacion");
-                e.IDEmpresa = e.empresa.ID = rs.getLong("id_empresa");
-                e.empresa.RNC = rs.getString("rnc_empresa");
-                e.empresa.Nombre = rs.getString("nombre_empresa");
+                e.setId(rs.getLong("id"));
+                e.setNombre(rs.getString("nombre"));
+                e.setApellidos(rs.getString("apellidos"));
+                e.setFechaDeContratacion(rs.getDate("fecha_de_contratacion").toString());
+                e.setSalarioMensual(rs.getDouble("salario_mensual"));
+                e.setIdEmpresa(rs.getLong("id_empresa"));
+                e.getEmpresa().setId(rs.getLong("id_empresa"));
+                e.getEmpresa().setRnc(rs.getString("rnc_empresa"));
+                e.getEmpresa().setNombre(rs.getString("nombre_empresa"));
             }
-            
+
         } catch (SQLException ex) {
             throw ex;
         }
-        
+
         return e;
     }
-    
+
     public Empleado CrearEmpleado(Empleado e) throws SQLException {
-        String queryStr = "INSERT INTO empleados "
-            +"(nombre, apellidos, fecha_de_contratacion, salario_mensual, id_empresa)"
-            +" VALUES (?, ?, ?, ?, ?);";
-        try {
-            PreparedStatement query = conn.prepareStatement(queryStr);
-            query.setString(1, e.Nombre);
-            query.setString(2, e.Apellidos);
-            query.setDate(3, e.FechaDeContratacion);
-            query.setDouble(4, e.SalarioMensual);
-            query.setLong(5, e.IDEmpresa);
-            query.executeUpdate();
-    
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID();");
-            while(rs.next()) {
-                e.ID = rs.getLong("LAST_INSERT_ID()");
-            }
-        } catch (SQLException ex) {
-            throw ex;
-        }
-
-        return e;
-    }
-
-    public Empleado ActualizarEmpleado(long id, Empleado empleado) throws SQLException {
-        String query = ""
-+"UPDATE empleados "
-+"SET"
-+"    nombre = ?,"
-+"    apellidos = ?,"
-+"    fecha_de_contratacion = ?,"
-+"    salario_mensual = ?,"
-+"    id_empresa = ?"
-+"WHERE id = ?;";
+        String query = "INSERT INTO empleados "
+                + "(nombre, apellidos, fecha_de_contratacion, salario_mensual, id_empresa)"
+                + " VALUES (?, ?, ?, ?, ?);";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, empleado.Nombre);
-            stmt.setString(2, empleado.Apellidos);
-            stmt.setDate(3, empleado.FechaDeContratacion);
-            stmt.setDouble(4, empleado.SalarioMensual);
-            stmt.setLong(5, empleado.IDEmpresa);
+            stmt.setString(1, e.getNombre());
+            stmt.setString(2, e.getApellidos());
+            stmt.setDate(3, java.sql.Date.valueOf(e.getFechaDeContratacion()));
+            stmt.setDouble(4, e.getSalarioMensual());
+            stmt.setLong(5, e.getIdEmpresa());
+            stmt.executeUpdate();
+
+            Statement lastIdStmt = conn.createStatement();
+            ResultSet rs = lastIdStmt.executeQuery("SELECT LAST_INSERT_ID();");
+            while (rs.next()) {
+                e.setId(rs.getLong("LAST_INSERT_ID()"));
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        }
+
+        return e;
+    }
+
+    public Empleado ActualizarEmpleado(long id, Empleado e) throws SQLException {
+        String query = "UPDATE empleados SET nombre = ?, apellidos = ?,"
+                + "fecha_de_contratacion = ?, salario_mensual = ?,id_empresa = ? WHERE id = ?;";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, e.getNombre());
+            stmt.setString(2, e.getApellidos());
+            stmt.setDate(3, java.sql.Date.valueOf(e.getFechaDeContratacion()));
+            stmt.setDouble(4, e.getSalarioMensual());
+            stmt.setLong(5, e.getIdEmpresa());
             stmt.setLong(6, id);
             stmt.executeUpdate();
         } catch (SQLException ex) {
             throw ex;
         }
-        return empleado;
+        return e;
     }
 
     /**
@@ -204,7 +195,7 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
         try {
             PreparedStatement stmt = conn.prepareStatement(queryStr);
             stmt.setLong(1, id);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             throw ex;
         }
@@ -227,18 +218,18 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
         } else {
             query += ";";
         }
-        
+
         ArrayList<Empresa> res = new ArrayList<Empresa>();
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-    
+
             while (rs.next()) {
                 Empresa e = new Empresa();
-                e.ID = rs.getLong("id");
-                e.Nombre = rs.getString("nombre");
-                e.RNC = rs.getString("rnc");
-    
+                e.setId(rs.getLong("id"));
+                e.setNombre(rs.getString("nombre"));
+                e.setRnc(rs.getString("rnc"));
+
                 res.add(e);
             }
         } catch (SQLException ex) {
@@ -247,51 +238,50 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
 
         return res;
     }
-    
+
     /**
      * Retorna una empresa de la base de datos.
      */
-	public Empresa GetEmpresaPorNombreORNC(String rncOrName) throws SQLException {
+    public Empresa GetEmpresaPorNombreORNC(String rncOrName) throws SQLException {
         String queryStr = "SELECT id, nombre, rnc FROM empresas WHERE rnc = ? OR nombre = ? LIMIT 1;";
         Empresa e = new Empresa();
         try {
             PreparedStatement query = conn.prepareStatement(queryStr);
             query.setString(1, rncOrName);
             query.setString(2, rncOrName);
-    
+
             ResultSet rs = query.executeQuery();
 
             while (rs.next()) {
-                e.ID = rs.getLong("id");
-                e.Nombre = rs.getString("nombre");
-                e.RNC = rs.getString("rnc");
+                e.setId(rs.getLong("id"));
+                e.setNombre(rs.getString("nombre"));
+                e.setRnc(rs.getString("rnc"));
             }
         } catch (SQLException ex) {
             throw ex;
         }
-        
+
         return e;
     }
-    
+
     /**
-     * Crea una empresa y retorna la empresa con el ID asignado por la base
-     * de datos.
+     * Crea una empresa y retorna la empresa con el ID asignado por la base de
+     * datos.
      */
     public Empresa CrearEmpresa(Empresa e) throws SQLException {
-        String queryStr = "INSERT INTO empresas"
-            +"(nombre, rnc) VALUES (?, ?)";
+        String query = "INSERT INTO empresas" + "(nombre, rnc) VALUES (?, ?)";
         try {
-            PreparedStatement query = conn.prepareStatement(queryStr);
-            query.setString(1, e.Nombre);
-            query.setString(2, e.RNC);
-            query.executeUpdate();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, e.getNombre());
+            stmt.setString(2, e.getRnc());
+            stmt.executeUpdate();
 
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID();");
-            while(rs.next()) {
-                e.ID = rs.getLong("LAST_INSERT_ID()");
+            Statement lastIdStmt = conn.createStatement();
+            ResultSet rs = lastIdStmt.executeQuery("SELECT LAST_INSERT_ID();");
+            while (rs.next()) {
+                e.setId(rs.getLong("LAST_INSERT_ID()"));
             }
-    
+
         } catch (SQLException ex) {
             throw ex;
         }
@@ -307,7 +297,7 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
         try {
             PreparedStatement stmt = conn.prepareStatement(queryStr);
             stmt.setLong(1, id);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             throw ex;
         }
@@ -317,8 +307,8 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
         String query = "UPDATE empresas SET nombre = ?, rnc = ? WHERE id = ?;";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, empresa.Nombre);
-            stmt.setString(2, empresa.RNC);
+            stmt.setString(1, empresa.getNombre());
+            stmt.setString(2, empresa.getRnc());
             stmt.setLong(3, id);
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -330,8 +320,8 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
     /**
      * cierra la conexion, evitando memory-leaks.
      */
-	protected void finalize() throws SQLException {
-		try {
+    protected void finalize() throws SQLException {
+        try {
             conn.close();
         } catch (SQLException ex) {
             throw ex;
@@ -339,7 +329,7 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
     }
 
     public static void printSQLException(SQLException ex) {
-        for (Throwable e: ex) {
+        for (Throwable e : ex) {
             if (e instanceof SQLException) {
                 e.printStackTrace(System.err);
                 System.err.println("SQLState: " + ((SQLException) e).getSQLState());
@@ -353,5 +343,5 @@ public class MySQL implements EmpresaStorer, EmpleadoStorer {
             }
         }
     }
-    
+
 }

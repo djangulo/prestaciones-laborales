@@ -37,7 +37,6 @@ public class PrestacionesForm {
     private String message = "";
     private MySQL db;
 
-
     ArrayList<Empresa> empresas = new ArrayList<Empresa>();
     ArrayList<Empleado> empleados = new ArrayList<Empleado>();
 
@@ -71,7 +70,7 @@ public class PrestacionesForm {
 
         try {
             setEmpresas(getDB().ListarEmpresas(100, 0));
-        } catch(SQLException ex) {
+        } catch (SQLException ex) {
             setMessage(ex.toString());
         }
         empresasInput.setItems(FXCollections.observableArrayList(getEmpresas()));
@@ -79,8 +78,8 @@ public class PrestacionesForm {
         setEmpresa(getEmpresas().get(0));
 
         try {
-            setEmpleados(getDB().ListarEmpleadosParaEmpresa(getEmpresa().ID, 100,0));
-        } catch(SQLException ex) {
+            setEmpleados(getDB().ListarEmpleadosParaEmpresa(getEmpresa().getId(), 100, 0));
+        } catch (SQLException ex) {
             setMessage(ex.toString());
         }
         empleadosInput.setItems(FXCollections.observableArrayList(getEmpleados()));
@@ -90,13 +89,13 @@ public class PrestacionesForm {
         empresasInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setEmpresa((Empresa)empresasInput.getValue());
+                setEmpresa((Empresa) empresasInput.getValue());
                 try {
-                    setEmpleados(getDB().ListarEmpleadosParaEmpresa(getEmpresa().ID, 100,0));
+                    setEmpleados(getDB().ListarEmpleadosParaEmpresa(getEmpresa().getId(), 100, 0));
                     empleadosInput.setItems(FXCollections.observableArrayList(getEmpleados()));
                     empleadosInput.getSelectionModel().selectFirst();
                     setEmpleado(getEmpleados().get(0));
-                } catch(SQLException sqlex) {
+                } catch (SQLException sqlex) {
                     setMessage(sqlex.toString());
                 }
             }
@@ -104,66 +103,61 @@ public class PrestacionesForm {
         empleadosInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setEmpleado((Empleado)empleadosInput.getValue());
+                setEmpleado((Empleado) empleadosInput.getValue());
             }
         });
         fechaDeSalidaInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setFechaDeSalida( Date.valueOf(fechaDeSalidaInput.getValue()) );
+                setFechaDeSalida(Date.valueOf(fechaDeSalidaInput.getValue()));
             }
         });
         preavisoInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setPreaviso( preavisoInput.isSelected() );
+                setPreaviso(preavisoInput.isSelected());
             }
         });
         cesantiaInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setCesantia( cesantiaInput.isSelected() );
+                setCesantia(cesantiaInput.isSelected());
             }
         });
         vacacionesInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setVacaciones( vacacionesInput.isSelected() );
+                setVacaciones(vacacionesInput.isSelected());
             }
         });
         salarioNavidadInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setSalarioNavidad( salarioNavidadInput.isSelected() );
+                setSalarioNavidad(salarioNavidadInput.isSelected());
             }
         });
 
         calcularBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                Prestaciones p = new Prestaciones(
-                    getEmpleado().FechaDeContratacion,
-                    getFechaDeSalida(),
-                    getEmpleado().SalarioMensual
-                );
-                setMessage(
-                    String.format("%s, %s (%s):\n\n", getEmpleado().Apellidos, getEmpleado().Nombre, getEmpresa().Nombre)
-                            +String.format("\t%-21s\t\t%,12.2f\n", "Salario Mensual:", getEmpleado().SalarioMensual)
-                            +String.format("\t%-21s\t%14s\n", "Fecha de contratación:", getEmpleado().FechaDeContratacion)
-                            +(getPreaviso() ? String.format("\t%-21s\t\t\t%,12.2f\n", "Preaviso:", p.Preaviso) : "")
-                            +(getCesantia() ? String.format("\t%-21s\t\t\t%,12.2f\n", "Cesantía:", p.Cesantia) : "")
-                            +(getVacaciones() ? String.format("\t%-21s\t\t\t%,12.2f\n", "Vacaciones:", p.Vacaciones) : "")
-                            +(getSalarioNavidad() ? String.format("\t%-21s\t\t%,12.2f\n", "Salario navidad:", p.SalarioNavidad) : "")
-                            +"----------------------------------------------------------------\n"
-                            +String.format(
-                                "\t%-21s\t\t\t%,12.2f\n",
-                                "Total:",
-                                    (getPreaviso() ? p.Preaviso : 0)
-                                    +(getCesantia() ? p.Cesantia : 0)
-                                    +(getVacaciones() ? p.Vacaciones: 0)
-                                    +(getSalarioNavidad() ? p.SalarioNavidad  : 0)
-                            )
-                );
+                Prestaciones p = new Prestaciones(Date.valueOf(getEmpleado().getFechaDeContratacion()),
+                        getFechaDeSalida(), getEmpleado().getSalarioMensual());
+                setMessage(String.format("%s, %s (%s):\n\n", getEmpleado().getApellidos(), getEmpleado().getNombre(),
+                        getEmpresa().getNombre())
+                        + String.format("\t%-21s\t\t%,12.2f\n", "Salario Mensual:", getEmpleado().getSalarioMensual())
+                        + String.format("\t%-21s\t%14s\n", "Fecha de contratación:",
+                                getEmpleado().getFechaDeContratacion())
+                        + (getPreaviso() ? String.format("\t%-21s\t\t\t%,12.2f\n", "Preaviso:", p.Preaviso) : "")
+                        + (getCesantia() ? String.format("\t%-21s\t\t\t%,12.2f\n", "Cesantía:", p.Cesantia) : "")
+                        + (getVacaciones() ? String.format("\t%-21s\t\t\t%,12.2f\n", "Vacaciones:", p.Vacaciones) : "")
+                        + (getSalarioNavidad()
+                                ? String.format("\t%-21s\t\t%,12.2f\n", "Salario navidad:", p.SalarioNavidad)
+                                : "")
+                        + "----------------------------------------------------------------\n"
+                        + String.format("\t%-21s\t\t\t%,12.2f\n", "Total:",
+                                (getPreaviso() ? p.Preaviso : 0) + (getCesantia() ? p.Cesantia : 0)
+                                        + (getVacaciones() ? p.Vacaciones : 0)
+                                        + (getSalarioNavidad() ? p.SalarioNavidad : 0)));
                 displayResults();
             }
         });
@@ -225,56 +219,71 @@ public class PrestacionesForm {
     public MySQL getDB() {
         return db;
     }
+
     public void setDB(MySQL db) {
         this.db = db;
     }
-    
+
     public Empresa getEmpresa() {
         return empresa;
     }
+
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
     }
+
     public Empleado getEmpleado() {
         return empleado;
     }
+
     public void setEmpleado(Empleado e) {
         this.empleado = e;
     }
+
     public boolean getPreaviso() {
         return preaviso;
     };
+
     public void setPreaviso(boolean preaviso) {
         this.preaviso = preaviso;
     };
+
     public boolean getCesantia() {
         return cesantia;
     };
+
     public void setCesantia(boolean cesantia) {
         this.cesantia = cesantia;
     };
+
     public boolean getVacaciones() {
         return vacaciones;
     };
+
     public void setVacaciones(boolean vacaciones) {
         this.vacaciones = vacaciones;
     };
+
     public boolean getSalarioNavidad() {
         return salarioNavidad;
     };
+
     public void setSalarioNavidad(boolean salarioNavidad) {
         this.salarioNavidad = salarioNavidad;
     };
+
     public Date getFechaDeSalida() {
-        return    fechaDeSalida;
+        return fechaDeSalida;
     };
+
     public void setFechaDeSalida(Date fechaDeSalida) {
         this.fechaDeSalida = fechaDeSalida;
     };
 
     public String getMessage() {
-        return    message;
+        return message;
     };
+
     public void setMessage(String message) {
         this.message = message;
     };
@@ -282,13 +291,16 @@ public class PrestacionesForm {
     private ArrayList<Empresa> getEmpresas() {
         return empresas;
     }
-    private void setEmpresas(ArrayList<Empresa> empresas){
+
+    private void setEmpresas(ArrayList<Empresa> empresas) {
         this.empresas = empresas;
     }
+
     private ArrayList<Empleado> getEmpleados() {
         return empleados;
     }
-    private void setEmpleados(ArrayList<Empleado> empleados){
+
+    private void setEmpleados(ArrayList<Empleado> empleados) {
         this.empleados = empleados;
     }
 

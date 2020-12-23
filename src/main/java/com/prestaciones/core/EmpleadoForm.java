@@ -4,9 +4,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.text.NumberFormat;
-import java.text.ParseException;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -28,11 +25,10 @@ import javafx.scene.paint.Color;
 import db.MySQL;
 import models.Empleado;
 import models.Empresa;
-import prestaciones.Prestaciones;
 
 public class EmpleadoForm {
     private MySQL db;
-    private ActualizadorVistas actualizador; 
+    private ActualizadorVistas actualizador;
     private Empleado empleado = new Empleado();
     ArrayList<Empresa> empresas = new ArrayList<Empresa>();
 
@@ -68,16 +64,15 @@ public class EmpleadoForm {
         }
         setDB(db);
         setActualizador(actualizador);
-        
 
         try {
             setEmpresas(getDB().ListarEmpresas(100, 0));
-        } catch(SQLException ex) {
+        } catch (SQLException ex) {
             formErrors.setText(ex.toString());
         }
         empresasInput.setItems(FXCollections.observableArrayList(getEmpresas()));
         empresasInput.getSelectionModel().selectFirst();
-        setIDEmpresa(getEmpresas().get(0).ID);
+        setIDEmpresa(getEmpresas().get(0).getId());
 
         empresasInput.setMaxWidth(200);
 
@@ -93,22 +88,22 @@ public class EmpleadoForm {
         empresasInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setIDEmpresa( ( (Empresa)empresasInput.getValue() ).ID );
+                setIDEmpresa(((Empresa) empresasInput.getValue()).getId());
             }
         });
 
-        nombreInput.focusedProperty().addListener((arg0, oldValue, newValue)    -> {
-            if (!newValue) { //when focus lost
+        nombreInput.focusedProperty().addListener((arg0, oldValue, newValue) -> {
+            if (!newValue) { // when focus lost
                 validarNombre();
             }
         });
         apellidosInput.focusedProperty().addListener((arg0, oldValue, newValue) -> {
-            if (!newValue) { //when focus lost
+            if (!newValue) { // when focus lost
                 validarApellidos();
             }
         });
         salarioMensualInput.focusedProperty().addListener((arg0, oldValue, newValue) -> {
-            if (!newValue) { //when focus lost
+            if (!newValue) { // when focus lost
                 validarSalario();
             }
         });
@@ -116,7 +111,7 @@ public class EmpleadoForm {
         fechaDeContratacionInput.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                setFechaDeContratacion( Date.valueOf(fechaDeContratacionInput.getValue()) );
+                setFechaDeContratacion(Date.valueOf(fechaDeContratacionInput.getValue()));
             }
         });
 
@@ -127,13 +122,10 @@ public class EmpleadoForm {
                 validarApellidos();
                 validarSalario();
 
-                if (
-                    nombreError.getText().length() == 0 &&
-                    apellidosError.getText().length() == 0 &&
-                    salarioMensualError.getText().length() == 0 &&
-                    getIDEmpresa() != 0 ) {
+                if (nombreError.getText().length() == 0 && apellidosError.getText().length() == 0
+                        && salarioMensualError.getText().length() == 0 && getIDEmpresa() != 0) {
                     try {
-                        if (getEmpleado().ID == 0) {
+                        if (getEmpleado().getId() == 0) {
                             setEmpleado(getDB().CrearEmpleado(getEmpleado()));
                         } else {
                             setEmpleado(getDB().ActualizarEmpleado(getID(), getEmpleado()));
@@ -141,7 +133,7 @@ public class EmpleadoForm {
                         actualizarTitulo();
                         actualizador.actualizar();
                         formErrors.setText("OK");
-                    } catch(SQLException ex) {
+                    } catch (SQLException ex) {
                         formErrors.setText(ex.toString());
                     }
                 }
@@ -160,7 +152,7 @@ public class EmpleadoForm {
         if (salarioMensualInput.getText().length() == 0) {
             msg = "Salario mensual: no puede estar vacío.";
         }
-        
+
         String s = salarioMensualInput.getText().replaceAll("[^\\d,.]", "");
         salarioMensualInput.setText(s);
 
@@ -170,8 +162,8 @@ public class EmpleadoForm {
             salarioMensualError.setText("");
             setSalarioMensual(Double.parseDouble(s.replaceAll(",", "")));
         }
-        System.out.println(getSalarioMensual());
     }
+
     public void validarNombre() {
         String msg = "";
         if (nombreInput.getText().length() == 0) {
@@ -205,11 +197,9 @@ public class EmpleadoForm {
     }
 
     public void actualizarTitulo() {
-        titulo.setText(
-            (getEmpleado().ID == 0 ? "Crear empleado" : String.format("Editar: %s", getEmpleado().toString()))
-        );
+        titulo.setText((getEmpleado().getId() == 0 ? "Crear empleado"
+                : String.format("Editar: %s", getEmpleado().toString())));
     }
-
 
     public GridPane getForm() {
         GridPane grid = new GridPane();
@@ -217,7 +207,7 @@ public class EmpleadoForm {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        
+
         titulo.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(titulo, 0, 0, 3, 1);
 
@@ -257,66 +247,101 @@ public class EmpleadoForm {
         salarioMensualError.setText("");
         fechaDeContratacionInput.setValue(LocalDate.now());
         formErrors.setText("");
+        setEmpleado(new Empleado());
         actualizarTitulo();
     }
 
     public MySQL getDB() {
         return db;
     }
+
     public void setDB(MySQL db) {
         this.db = db;
     }
+
     public void setActualizador(ActualizadorVistas actualizador) {
         this.actualizador = actualizador;
     }
-    
 
     public long getID() {
-        return empleado.ID;
+        return empleado.getId();
     }
+
     public void setID(long id) {
-        this.empleado.ID = id;
+        this.empleado.setId(id);
     }
+
     public String getNombre() {
-        return empleado.Nombre;
+        return empleado.getNombre();
     }
+
     public void setNombre(String nombre) {
-        this.empleado.Nombre = nombre;
+        this.empleado.setNombre(nombre);
     }
+
     public double getSalarioMensual() {
-        return empleado.SalarioMensual;
+        return empleado.getSalarioMensual();
     }
+
     public void setSalarioMensual(double salario) {
-        this.empleado.SalarioMensual = salario;
+        this.empleado.setSalarioMensual(salario);
     }
+
     public Date getFechaDeContratacion() {
-        return empleado.FechaDeContratacion;
+        return Date.valueOf(empleado.getFechaDeContratacion());
     }
+
     public void setFechaDeContratacion(Date fecha) {
-        this.empleado.FechaDeContratacion = fecha;
+        this.empleado.setFechaDeContratacion(fecha.toString());
     }
+
     public String getApellidos() {
-        return empleado.Apellidos;
+        return empleado.getApellidos();
     }
+
     public void setApellidos(String apellidos) {
-        this.empleado.Apellidos = apellidos;
+        this.empleado.setApellidos(apellidos);
     }
+
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
+
+        if (empleado.getNombre().length() > 0) {
+            nombreInput.setText(empleado.getNombre());
+            apellidosInput.setText(empleado.getApellidos());
+            salarioMensualInput.setText(Double.toString(empleado.getSalarioMensual()));
+            fechaDeContratacionInput.setValue(LocalDate.parse(empleado.getFechaDeContratacion()));
+        }
+
+        if (empleado.getEmpresa().getNombre().length() > 0) {
+            for (int i = 0; i < empresas.size(); i++) {
+                if (empresas.get(i).getRnc() == empleado.getRncEmpresa()) {
+                    empresasInput.getSelectionModel().select(i);
+                    break;
+                }
+            }
+        } else {
+            empresasInput.getSelectionModel().selectFirst();
+        }
     }
+
     public Empleado getEmpleado() {
         return empleado;
     }
+
     private ArrayList<Empresa> getEmpresas() {
         return empresas;
     }
-    private void setEmpresas(ArrayList<Empresa> empresas){
+
+    private void setEmpresas(ArrayList<Empresa> empresas) {
         this.empresas = empresas;
     }
+
     public long getIDEmpresa() {
-        return empleado.IDEmpresa;
+        return empleado.getIdEmpresa();
     }
+
     public void setIDEmpresa(long idEmpresa) {
-        this.empleado.IDEmpresa = idEmpresa;
+        this.empleado.setIdEmpresa(idEmpresa);
     }
 }

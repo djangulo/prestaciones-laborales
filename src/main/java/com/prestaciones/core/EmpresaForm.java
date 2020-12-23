@@ -1,11 +1,7 @@
 package com.prestaciones.core;
 
-import java.sql.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,9 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
@@ -23,13 +17,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.paint.Color;
 
 import db.MySQL;
-import models.Empleado;
 import models.Empresa;
-import prestaciones.Prestaciones;
 
 public class EmpresaForm {
     private MySQL db;
-    private ActualizadorVistas actualizador; 
+    private ActualizadorVistas actualizador;
     private Empresa empresa = new Empresa();
 
     Label nombreLabel = new Label("Nombre:");
@@ -60,16 +52,16 @@ public class EmpresaForm {
 
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 
-        nombreInput.focusedProperty().addListener((arg0, oldValue, newValue)    -> {
-            if (!newValue) { //when focus lost
+        nombreInput.focusedProperty().addListener((arg0, oldValue, newValue) -> {
+            if (!newValue) { // when focus lost
                 validarNombre();
             }
         });
         rncInput.focusedProperty().addListener((arg0, oldValue, newValue) -> {
-            
-            if (!newValue) { //when focus lost
+
+            if (!newValue) { // when focus lost
                 validarRNC();
-                
+
             }
         });
 
@@ -80,7 +72,7 @@ public class EmpresaForm {
                 validarRNC();
                 if (nombreError.getText().length() == 0 && rncError.getText().length() == 0) {
                     try {
-                        if (getEmpresa().ID == 0) {
+                        if (getEmpresa().getId() == 0) {
                             setEmpresa(getDB().CrearEmpresa(getEmpresa()));
                         } else {
                             setEmpresa(getDB().ActualizarEmpresa(getID(), getEmpresa()));
@@ -88,7 +80,7 @@ public class EmpresaForm {
                         actualizarTitulo();
                         actualizador.actualizar();
                         formErrors.setText("OK");
-                    } catch(SQLException ex) {
+                    } catch (SQLException ex) {
                         formErrors.setText(ex.toString());
                     }
                 }
@@ -124,6 +116,7 @@ public class EmpresaForm {
             setRNC(rncInput.getText());
         }
     }
+
     public void validarNombre() {
         String msg = "";
         if (nombreInput.getText().length() == 0) {
@@ -139,12 +132,11 @@ public class EmpresaForm {
             setNombre(nombreInput.getText());
         }
     }
+
     public void actualizarTitulo() {
         titulo.setText(
-            (getEmpresa().ID == 0 ? "Crear empresa" : String.format("Editar: %s", getEmpresa().toString()))
-        );
+                (getEmpresa().getId() == 0 ? "Crear empresa" : String.format("Editar: %s", getEmpresa().toString())));
     }
-
 
     public GridPane getForm() {
         GridPane grid = new GridPane();
@@ -152,7 +144,7 @@ public class EmpresaForm {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        
+
         titulo.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(titulo, 0, 0, 2, 1);
 
@@ -179,40 +171,55 @@ public class EmpresaForm {
         rncInput.setText("");
         rncError.setText("");
         formErrors.setText("");
+        setEmpresa(new Empresa());
+        actualizarTitulo();
     }
 
     public MySQL getDB() {
         return db;
     }
+
     public void setDB(MySQL db) {
         this.db = db;
     }
+
     public void setActualizador(ActualizadorVistas actualizador) {
         this.actualizador = actualizador;
     }
-    
 
     public long getID() {
-        return empresa.ID;
+        return empresa.getId();
     }
+
     public void setID(long id) {
-        this.empresa.ID = id;
+        this.empresa.setId(id);
     }
+
     public String getNombre() {
-        return empresa.Nombre;
+        return empresa.getNombre();
     }
+
     public void setNombre(String nombre) {
-        this.empresa.Nombre = nombre;
+        this.empresa.setNombre(nombre);
     }
+
     public String getRNC() {
-        return empresa.RNC;
+        return empresa.getRnc();
     }
+
     public void setRNC(String rnc) {
-        this.empresa.RNC = rnc;
+        this.empresa.setRnc(rnc);
     }
+
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+
+        if (empresa.getNombre().length() > 0) {
+            nombreInput.setText(empresa.getNombre());
+            rncInput.setText(empresa.getRnc());
+        }
     }
+
     public Empresa getEmpresa() {
         return empresa;
     }

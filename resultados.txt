@@ -1,0 +1,87 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------< com.prestacionesINC.prestaciones:prestacionesLaborales >-------
+[INFO] Building prestacionesLaborales 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec-maven-plugin:3.0.0:java (default-cli) @ prestacionesLaborales ---
+Rodríguez, Ana (El Estudiante):
+	Salario Mensual:       145000.25
+	Fecha de contratación: 2017-03-01
+	Preaviso:              133479.68
+	Cesantía:              100109.76
+	Vacaciones:            66739.84
+	Salario navidad:       145000.25
+
+Angulo, Denis (El Estudiante):
+	Salario Mensual:       23129.72
+	Fecha de contratación: 2018-05-04
+	Preaviso:              21292.02
+	Cesantía:              15969.01
+	Vacaciones:            10646.01
+	Salario navidad:       23129.72
+
+Pelagio, Soriano (UNICARIBE SA):
+	Salario Mensual:       70000.00
+	Fecha de contratación: 2014-01-01
+	Preaviso:              64438.36
+	Cesantía:              366109.59
+	Vacaciones:            41424.66
+	Salario navidad:       70000.00
+
+De Jesus, Jose (UNICARIBE SA):
+	Salario Mensual:       70000.00
+	Fecha de contratación: 2015-01-01
+	Preaviso:              64438.36
+	Cesantía:              313178.08
+	Vacaciones:            41424.66
+	Salario navidad:       70000.00
+
+Polanco, Richard (UNICARIBE SA):
+	Salario Mensual:       70000.00
+	Fecha de contratación: 2016-01-01
+	Preaviso:              64438.36
+	Cesantía:              48328.77
+	Vacaciones:            32219.18
+	Salario navidad:       70000.00
+
+Peguero, Juan (UNICARIBE SA):
+	Salario Mensual:       70000.00
+	Fecha de contratación: 2017-01-01
+	Preaviso:              64438.36
+	Cesantía:              48328.77
+	Vacaciones:            32219.18
+	Salario navidad:       70000.00
+
+Perez, Juan (APS):
+	Salario Mensual:       23129.72
+	Fecha de contratación: 2011-05-04
+	Preaviso:              21292.02
+	Cesantía:              167611.26
+	Vacaciones:            13687.72
+	Salario navidad:       23129.72
+
+Mendez, Andres (APS):
+	Salario Mensual:       23129.72
+	Fecha de contratación: 2015-01-03
+	Preaviso:              21292.02
+	Cesantía:              103481.73
+	Vacaciones:            13687.72
+	Salario navidad:       23129.72
+
+Rodríguez, Miguel (APS):
+	Salario Mensual:       44000.00
+	Fecha de contratación: 2019-05-04
+	Preaviso:              40504.11
+	Cesantía:              30378.08
+	Vacaciones:            20252.05
+	Salario navidad:       44000.00
+
+Santana, Antonio (APS):
+	Salario Mensual:       51000.00
+	Fecha de contratación: 2012-06-23
+	Preaviso:              46947.95
+	Cesantía:              324583.56
+	Vacaciones:            30180.82
+	Salario navidad:       51000.00
+

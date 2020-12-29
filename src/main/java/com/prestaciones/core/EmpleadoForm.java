@@ -65,11 +65,7 @@ public class EmpleadoForm {
         setDB(db);
         setActualizador(actualizador);
 
-        try {
-            setEmpresas(getDB().ListarEmpresas(100, 0));
-        } catch (SQLException ex) {
-            formErrors.setText(ex.toString());
-        }
+        actualizar();
         empresasInput.setItems(FXCollections.observableArrayList(getEmpresas()));
         empresasInput.getSelectionModel().selectFirst();
         setIDEmpresa(getEmpresas().get(0).getId());
@@ -143,6 +139,7 @@ public class EmpleadoForm {
             @Override
             public void handle(ActionEvent e) {
                 resetForm();
+                actualizar();
             }
         });
     }
@@ -343,5 +340,17 @@ public class EmpleadoForm {
 
     public void setIDEmpresa(long idEmpresa) {
         this.empleado.setIdEmpresa(idEmpresa);
+    }
+
+    public void actualizar() {
+        try {
+            setEmpresas(getDB().ListarEmpresas(100, 0));
+        } catch (SQLException ex) {
+            formErrors.setText(ex.toString());
+        }
+
+        empresasInput.setItems(FXCollections.observableArrayList(getEmpresas()));
+        empresasInput.getSelectionModel().selectFirst();
+        setIDEmpresa(getEmpresas().get(0).getId());
     }
 }
